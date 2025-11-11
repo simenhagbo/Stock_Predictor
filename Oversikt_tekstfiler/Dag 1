@@ -1,0 +1,43 @@
+1. Bygget grunnstruktur
+
+- read_files → finner alle .csv i Data/
+
+- clean_stock_data → rydder kolonner, setter dato som indeks, sorterer og fjerner NaN med ffill()
+
+- Skilt koden i egne filer (Les_inn_filer.py, features.py, plot_prices.py).
+
+2. Lært om indeks og NaN
+
+- Sett at Date blir indeks (ikke en vanlig kolonne).
+
+- Oppdaget at shift og rolling gir NaN i starten → helt normalt.
+
+- Laget en egen funksjon dropna_features for å fjerne de radene.
+
+3. Laget features
+
+- Returns = ukentlig avkastning med .shift(1)
+
+- SMA5, SMA20 = glidende gjennomsnitt (5 og 20 uker)
+
+- Testet at kolonnene blir riktige og forstått hvorfor de første radene er NaN.
+
+4. Visualisert pris
+
+- Brukt plot_prices.py til å tegne prisutviklingen over tid.
+
+Hvor vi stopper i dag
+
+Du har et datasett for Orkla (og de andre selskapene) som nå har Price, Returns, SMA5, SMA20, Volume.
+
+Du kan rense, lage features og droppe start-NaN.
+
+Neste steg blir å lage X (features) og y (target = neste ukes pris) → klart til å splitte i trenings- og testperiode.
+
+Neste gang kan vi starte rett på:
+
+X = df[["Returns","SMA5","SMA20","Volume"]]
+
+y = df["Price"].shift(-1)
+
+Splitte i treningsperiode (80%) og testperiode (20%).

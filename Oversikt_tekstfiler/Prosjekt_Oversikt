@@ -1,0 +1,58 @@
+Lage en ML modell som predikerer aksjepriser
+Bruker aksjeselskapene Orkla, Frontline, Aker BP og Equinor
+Vi har data fra hver av selskapene helt fra 1. januar 2015 til idag 26. august 2025, altså 10 år og 8 måneder.
+Vi tar en aksje om gangen for å predikere fremtidig aksjepris.
+Først må vi gå gjennom dataene og rense de for outliers og manglende verdier
+Så må vi prosessere dataene så modellen trenes best mulig.
+
+
+# Aksje-ML: Prosjektlogg & Sjekkliste
+
+**Mål:** Lage en MVP-modell som predikerer neste dags avkastning/pris for én aksje av gangen (Orkla, Frontline, Aker BP, Equinor) med ryddig pipeline.
+
+---
+
+## Data (fakta)
+
+* Kilde: CSV per selskap
+* Tidsrom: 2015-01-01 → 2025-08-26 (felles tidslinje for alle)
+* Kolonner: Pris/Close, Open/High/Low, Vol/Volume, Change %, Date (vi bruker Date som indeks)
+
+---
+
+## Moduler og filer
+
+* **Les inn / Rens:** `clean_stock_data()`, `load_all_data()`
+* **Plot:** sammenligning av priser pr. selskap
+* **ML (kommer):** `ml_pipeline.py` (features, splitting, modell, evaluering)
+
+---
+
+## Status
+
+* [x] Rådata lastet opp (4 selskaper)
+* [x] Les/clean-funksjon som håndterer dato, desimaler, volum, change%
+* [x] Plot av priser per selskap
+* [ ] **Neste:** samle priser til én felles DataFrame + beregn daglige avkastninger
+* [ ] EDA: histogram av returns + korrelasjons-heatmap + cumulative returns
+* [ ] Feature engineering (laggede returns, SMA/EMA, volatilitet)
+* [ ] Walk-forward validering og baseline-modell
+
+---
+
+## Steg 1 – Felles prisramme + returns
+
+**Definition of Done (DoD):**
+
+* En funksjon som tar `dict[str, DataFrame]` fra `load_all_data()` og returnerer en DataFrame:
+
+  * Kolonner: ett selskap pr. kolonne (navnene: `Equinor`, `Orkla`, `AkerBP`, `Frontline`)
+  * Indeks: `Date` (sortert, uten duplikater)
+  * Ingen `NaN` i overlappende periode
+* En funksjon som returnerer **daglige avkastninger** (`pct_change()`) fra pris-DF’en, `dropna()`
+* Sanity checks (asserts) for felles tidsrom og antall rader
+
+**Oppgave 1A – Samle priser:**
+
+* Input: `data_dict = load_all_data(...)`
+* Velg pris-kolonne per df:

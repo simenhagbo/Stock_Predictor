@@ -1,0 +1,29 @@
+START
+
+LES inn CSV for DNB, Equinor, Orkla, Frontline  - gjort
+RYDD kolonner, sett DATO som indeks - gjort
+SORTER data etter dato - gjort
+HÅNDTER NaN-verdier - gjort
+
+VISUALISER pris over tid - gjort
+
+LAG features: - gjort
+    - returns = (Close - Close.shift(1)) / Close.shift(1) - gjort
+    - moving_avg_5 = rolling mean 5 dager - gjort
+    - moving_avg_20 = rolling mean 20 dager - gjort
+
+SET y = neste dags Close
+SET X = [returns, moving_avg_5, moving_avg_20, Volume]
+
+SPLITT treningsdata (2015-2022), testdata (2023-2024)
+
+VELG modell (LinearRegression, RandomForest)
+TREN modellen på treningsdata
+PREDIKER testdata
+
+BEREGN feil (MSE, MAE)
+VIS grafer av predicted vs actual
+
+BRUK siste data til å spå fremtidige priser
+
+SLUTT
