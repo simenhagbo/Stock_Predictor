@@ -28,7 +28,7 @@ To run this on your own computer please do the following steps:
 
 6. Project build up folder structure
 
-Folder structure
+## Folder structure
 Personal_ML_Project/
 │
 ├── Data/               # CSV-files with stockprices
