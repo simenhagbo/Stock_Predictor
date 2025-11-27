@@ -42,6 +42,4 @@ def scale_features(X):
     return X_scaled
 
 
-#if __name__ == "__main__":
-
 

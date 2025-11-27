@@ -1,16 +1,26 @@
+
+use_api = True
+use_csv = False
+
 use_RF_tuning = False
 use_GB_tuning = True
 
-
 # Kall alle funksjonen i en egen funksjon i riktig rekkefølge
 def solve(filepath):
-    from read_files import read_files, clean_stock_data
+    from read_files import read_files, clean_stock_data, clean_yf_data, retrieve_data_from_yf
     from features import make_features, drop_na_features, make_X_y, scale_features
     from train import split_data, train_random_forest, make_predictions, evaluate_model, tune_gradient_boost, show_feature_importance, tune_random_forest
-    df = read_files(filepath)
-    df = clean_stock_data(df)
-    df = make_features(df)
-    df = drop_na_features(df)
+    if use_csv:
+        df = read_files(filepath)
+        df = clean_stock_data(df)
+        df = make_features(df)
+        df = drop_na_features(df)
+    elif use_api:
+        tickers = ["DNB.OL", "EQNR.OL", "ORK.OL", "KITO.OL", "FRO.OL", ""]
+        data_dict = retrieve_data_from_yf(tickers)
+        import pandas as pd
+        df = pd.concat(list(data_dict.values()))
+        print("Data hentet fra API")
     X, y = make_X_y(df)
     X_train, X_test, y_train, y_test = split_data(X, y)
     if use_RF_tuning:

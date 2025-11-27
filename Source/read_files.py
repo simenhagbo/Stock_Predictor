@@ -1,5 +1,11 @@
 import os
+
+
 import pandas as pd
+import yfinance as yf
+from datetime import date, timedelta, datetime
+import time
+from typing import List, Optional
 
 # Lag en funksjon som leser inn filene
 def read_files(filepath):
@@ -12,6 +18,32 @@ def list_csv_files(mappe):
         if fil.endswith(".csv"):
             csv_filer.append(fil)
     return csv_filer
+
+def clean_yf_data(df):
+    df.reset_index(inplace=True) # Gjør 'Date' til kolonne
+    df["Date"] = pd.to_datetime(df["Date"]) # Setter riktig datoformat
+    df.sort_values("Date", inplace=True) # Sorterer på stigende dato
+    df = df.ffill() # Fyller hull i dataen med siste verdi
+    return df
+
+def retrieve_data_from_yf(tickers):
+    all_data = {}
+
+    for t in tickers:
+        print(f"Retrieving data for {t}.")
+        try:
+            df = yf.download(t, start="2015-06-01", end="2025-10-26", interval="1wk")
+            df = clean_yf_data(df)
+            df.rename(columns={"Close": "Price", "Volume": "Vol."}, inplace=True)
+            df["Change %"] = df["Price"].pct_change() * 100
+            df.set_index("Date", inplace=True)
+            all_data[t] = df
+        except Exception as e:
+            print(f"Feil ved henting av {t}: {e}")
+            continue
+        time.sleep(0.2)
+        print(f"Ferdig med {t} \n")
+    return all_data
 
 # Lag en rense funksjon som renser kolonner og setter date til datetime
 def clean_stock_data(df):
