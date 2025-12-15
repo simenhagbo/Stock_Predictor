@@ -1,12 +1,13 @@
 import numpy as np
 import pandas as pd
 
+
 def add_market_reaction(df):
     vol_factor = np.log10(df["Vol."] / df["Vol."].mean())
     df["Market_Reaction"] = df["Change %"] * vol_factor
     return df
 
-# Lager en funksjon som lager nye features
+# Lager en funksjon som lager nye features for nedlastende csv filer
 def make_features(df):
     #df["SMA5"] = df["Price"].rolling(5).mean()
     #df["SMA20"] = df["Price"].rolling(20).mean()
@@ -16,6 +17,7 @@ def make_features(df):
     df = add_market_reaction(df)
     return df
 
+# Drop na funkjson for csv filer
 def drop_na_features(df):
     df = df.dropna(subset=["prev_change", "volatility_5w", "momentum_3w"])
     return df
