@@ -1,7 +1,7 @@
 # Personal Machine Learning Project
 
-This is a project that uses machine learning to predict future stock prices for six norwegian companies: DnB, Equinor, Frontline, Kitron, Orkla, Storebrand. I've found and retrieved historical data for each company from [Investing.com](https://www.investing.com/).
-For each company, weekly historical data was collected from June 1, 2015, to October 26, 2025. 
+This is a project that uses machine learning to predict future stock prices. I have greated a script that shows multiple models of choice. Its running one function with data directly from the API, and one with csv files, which is retrieved and stored from the API. Easy to choose between the models: Random Forest, Tuned Random Forest, tuned Gradient booster. I've retrieved tickers from yfinance API and storing the ticker data as csv files for use of the csv version. 
+For each ticker, weekly historical data was collected from June 1, 2015, to todays date. 
 
 ----------
 ## Status
@@ -42,23 +42,20 @@ Personal_ML_Project/
 ----------
 
 ## Results from run 
-
-DnB: RMSE: 0.023 og MAE: 0.016
-
-Equinor: RMSE: 0.033 og MAE: 0.027 
-
-Frontline: RMSE: 0.027 og MAE: 0.020
-
-Kitron: RMSE: 0.084 og MAE: 0.052
-
-Orkla: RMSE: 0.027 og MAE: 0.019
-
-Storebrand: RMSE: 0.028 og MAE: 0.020
+### API Tuned Gradient Booster
+Ticker       | RMSE     | Prediction for next week
+--------------------------------------------------
+KIT          | 0.0551   | 0.70% (UP)
+STB          | 0.0274   | 0.38% (UP)
+MOWI         | 0.0281   | -0.31% (DOWN)
+FRO          | 0.0600   | 0.38% (UP)
+ATEA         | 0.0298   | 0.30% (UP)
+NORCO        | 0.0291   | 0.64% (UP)
+LINK         | 0.0437   | -0.25% (DOWN)
 
 ----------
 
 ## Further work
-- Add more data to improve model generalisation
 - Experiment with new features and technical indicators
 - Test with Neural Networks to compare with ensemble methods
 - Implement Genetic algorithms for hyperparameter tuning
