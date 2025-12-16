@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 import pandas as pd
 import yfinance as yf
 import time
@@ -7,7 +9,7 @@ import time
 # Use of Yahoo Finance API
 def clean_yf_data(df):
     if isinstance(df.columns, pd.MultiIndex):
-        df.columns = df.columns.droplevel(1)
+        df.columns = df.columns.get_level_values(0)
 
     df.reset_index(inplace=True) # Gjør 'Date' til kolonne
     df["Date"] = pd.to_datetime(df["Date"]) # Setter riktig datoformat
@@ -17,36 +19,51 @@ def clean_yf_data(df):
 
 def retrieve_data_from_yf(tickers):
     all_data = {}
+    today = datetime.now().strftime("%Y-%m-%d")
     # Gjennomgå tickers listen
     for t in tickers:
         print(f"Retrieving data for {t}.")
         # Prøv å hent data fra 6. juni 2015 til 01.12.2025, med 1 ukes intervall
         try:
-            df = yf.download(t, start="2015-12-01", end="2025-12-01", interval="1wk", auto_adjust=False, progress=False)
+            df = yf.download(t, start="2015-12-01", end=today, interval="1wk", auto_adjust=True, progress=False)
             if df.empty:
+                print(f"Ingen data for {t}")
                 continue
             # Rens dataene
             df = clean_yf_data(df)
 
+            if "Close" not in df.columns:
+                print(f"Mangler 'Close'-kolonne for {t} (Fant: {df.columns.tolist()})")
+                continue
+
             df.rename(columns={"Close": "Price", "Volume": "Vol."}, inplace=True)
             # Lag en feature 'Change %'
             df["Change %"] = df["Price"].pct_change()
+            df.dropna(subset=["Change %"], inplace=True)
             df.set_index("Date", inplace=True)
             all_data[t] = df
 
-            # Liten debug: vis de 3 første radene
-            print(f"{t}: hentet {len(df)} rader")
-            print(df.head(3))
+            print(f"{t}: hentet {len(df)} rader. Siste pris: {df['Price'].iloc[-1]:.2f}")
+
 
         except Exception as e:
             print(f"Feil ved henting av {t}: {e}")
             continue
-        time.sleep(8)
-        print(f"Ferdig med {t} \n")
+        time.sleep(2)
+
     return all_data
 
 
-#  Use of csv files
+# --- Hvordan du bruker og lagrer dette ---
+if __name__ == "__main__":
+    # Husk å bruke tickers med .OL for norske aksjer (hvis yfinance krever det)
+    mine_tickers = ["EQNR.OL", "DNB.OL", "ORK.OL", "KIT.OL"]
+
+    data_dict = retrieve_data_from_yf(mine_tickers)
+
+
+
+# ---------------- Use of csv files ------------------
 
 
 # Lag en funksjon som leser inn filene

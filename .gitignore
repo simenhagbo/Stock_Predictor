@@ -1,0 +1,8 @@
+# Ignorer PyCharm-prosjektfiler
+.idea/
+*.iml
+*.xml
+
+# Ignorer Python-cache (kompilerte filer)
+__pycache__/
+*.pyc
